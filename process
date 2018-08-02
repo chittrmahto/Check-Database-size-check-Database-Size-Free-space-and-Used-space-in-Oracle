@@ -1,0 +1,11 @@
+SQL> col "Database Size" format a20
+
+SQL> col "Free space" format a20
+
+SQL> col "Used space" format a20
+
+SQL> SELECT ROUND (SUM (used.BYTES) / 1024 / 1024 / 1024)||' GB' "Database Size",
+ROUND (SUM (used.BYTES) / 1024 / 1024 / 1024)- ROUND (free.p / 1024 / 1024 / 1024)|| ' GB' "Used space",
+ROUND (free.p / 1024 / 1024 / 1024) || ' GB' "Free space" FROM (SELECT BYTES FROM v$datafile UNION ALL SELECT BYTES 
+FROM v$tempfile UNION ALL SELECT BYTES FROM v$log) used,(SELECT SUM (BYTES) AS p 
+FROM dba_free_space) free GROUP BY free.p;
